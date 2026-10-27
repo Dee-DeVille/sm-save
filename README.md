@@ -8,6 +8,16 @@
 
 A tape-deck styled desktop downloader for video and audio links, built with [Tauri](https://tauri.app/) v2, [React](https://react.dev/) 19, TypeScript and Tailwind CSS v4. Powered by `yt-dlp` and `ffmpeg` under the hood.
 
+## Just want to use SM-SAVE?
+
+You do **not** need Rust, Cargo, Bun, Tauri or any other developer tool. Those are only for building the app from source.
+
+1. Open the **[Releases](https://github.com/Dee-DeVille/sm-save/releases/latest)** page.
+2. Download the installer for your system — on Windows, **`SM-SAVE_..._x64-setup.exe`**.
+3. Run it, then launch **SM-SAVE** from the Start menu.
+
+`yt-dlp`, `ffmpeg` and `ffprobe` are already packed inside the installer, so there is nothing else to download or install. Everything from here to the "Credits" section is developer documentation and can be ignored.
+
 ## Features
 
 - **Tape-deck faceplate** — a single-window deck with a transport readout, segmented level meter and a ruled download ledger.
@@ -23,9 +33,8 @@ A tape-deck styled desktop downloader for video and audio links, built with [Tau
 
 Pre-built packages are published on the **[Releases](https://github.com/Dee-DeVille/sm-save/releases/latest)** page:
 
-- 🍎 **macOS (Apple Silicon M1/M2/M3/M4)**: download the **`.dmg`** file.
-- 🪟 **Windows (64-bit)**: download the **`.exe`** installer or the **`.msi`** package.
-- 🐧 **Linux (64-bit)**: download the **`.AppImage`** or **`.deb`** package.
+- 🪟 **Windows (64-bit)** — published in v0.1.0: the **`.exe`** installer (recommended) or the **`.msi`** package.
+- 🍎 **macOS (Apple Silicon)** / 🐧 **Linux (64-bit)** — the release workflow builds `.dmg`, `.AppImage` and `.deb` whenever a version tag is pushed; those are not attached to v0.1.0 yet.
 
 ### macOS installation note
 
@@ -42,7 +51,9 @@ To open it in seconds:
    ```
 3. Open SM-SAVE normally.
 
-## Prerequisites
+## Prerequisites (only for building from source)
+
+Skip this section if you installed a release package — the installer already contains everything.
 
 Before you begin, make sure you have:
 
