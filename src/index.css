@@ -1,0 +1,282 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource-variable/archivo/wdth.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  SM-SAVE faceplate system.
+
+  The app is drawn as a piece of recording hardware: a brushed faceplate on a
+  desk, recessed wells for inputs, raised keys for transport, silkscreened
+  legends, and a segmented LED meter for level. Two finishes exist — aluminium
+  (light) and graphite (dark) — sharing identical geometry.
+*/
+
+@theme inline {
+    --font-sans: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+    /* Faceplate surfaces */
+    --color-desk: var(--desk);
+    --color-face: var(--face);
+    --color-face-raised: var(--face-raised);
+    --color-well: var(--well);
+    --color-edge: var(--edge);
+    --color-line: var(--line);
+    --color-line-hi: var(--line-hi);
+
+    /* Ink */
+    --color-ink: var(--ink);
+    --color-ink-strong: var(--ink-strong);
+    --color-ink-muted: var(--ink-muted);
+    --color-ink-faint: var(--ink-faint);
+
+    /* Signal */
+    --color-ochre: var(--ochre);
+    --color-ochre-ink: var(--ochre-ink);
+    --color-record: var(--record);
+    --color-led: var(--led);
+    --color-led-amber: var(--led-amber);
+    --color-led-dim: var(--led-dim);
+
+    /* shadcn bridge — primitives inherit the faceplate palette */
+    --color-background: var(--face);
+    --color-foreground: var(--ink);
+    --color-card: var(--face-raised);
+    --color-card-foreground: var(--ink);
+    --color-popover: var(--face-raised);
+    --color-popover-foreground: var(--ink);
+    --color-primary: var(--ochre);
+    --color-primary-foreground: var(--ochre-ink);
+    --color-secondary: var(--face-raised);
+    --color-secondary-foreground: var(--ink);
+    --color-muted: var(--muted-wash);
+    --color-muted-foreground: var(--ink-muted);
+    --color-accent: var(--hover-wash);
+    --color-accent-foreground: var(--ink);
+    --color-destructive: var(--record);
+    --color-border: var(--edge);
+    --color-input: var(--edge);
+    --color-ring: var(--ochre);
+
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --radius-xl: 11px;
+    --radius-2xl: 14px;
+    --radius-3xl: 18px;
+    --radius-4xl: 22px;
+}
+
+/* Aluminium finish */
+:root {
+    --desk: oklch(0.775 0.007 95);
+    --face: oklch(0.912 0.008 95);
+    --face-raised: oklch(0.952 0.007 95);
+    --well: oklch(0.858 0.010 95);
+    --edge: oklch(0.752 0.011 95);
+    --line: oklch(0.706 0.013 95);
+    --line-hi: oklch(0.992 0.003 95);
+
+    --ink: oklch(0.235 0.012 78);
+    --ink-strong: oklch(0.155 0.012 78);
+    --ink-muted: oklch(0.425 0.014 78);
+    --ink-faint: oklch(0.525 0.014 78);
+
+    --ochre: oklch(0.552 0.128 68);
+    --ochre-ink: oklch(0.985 0.008 85);
+    --record: oklch(0.512 0.168 30);
+    --led: oklch(0.505 0.115 142);
+    --led-amber: oklch(0.655 0.135 76);
+    --led-dim: oklch(0.806 0.009 95);
+
+    --muted-wash: oklch(0.868 0.008 95);
+    --hover-wash: oklch(0.845 0.010 95);
+    --brush: rgb(28 25 20 / 0.028);
+    --rule: oklch(0.812 0.009 95);
+
+    --shadow-key:
+        inset 0 1px 0 oklch(1 0 0 / 0.9),
+        0 1px 0 oklch(0.70 0.012 95),
+        0 2px 3px oklch(0.45 0.010 95 / 0.22);
+    --shadow-key-down:
+        inset 0 2px 4px oklch(0.60 0.012 95 / 0.45),
+        inset 0 -1px 0 oklch(1 0 0 / 0.55);
+    --shadow-well:
+        inset 0 2px 4px oklch(0.58 0.012 95 / 0.38),
+        inset 0 -1px 0 oklch(1 0 0 / 0.6);
+    --meter-glow: 0 0 0 0 transparent;
+}
+
+/* Graphite finish */
+.dark {
+    --desk: oklch(0.122 0.006 70);
+    --face: oklch(0.262 0.008 70);
+    --face-raised: oklch(0.322 0.009 70);
+    --well: oklch(0.192 0.007 70);
+    --edge: oklch(0.402 0.011 70);
+    --line: oklch(0.192 0.008 70);
+    --line-hi: oklch(0.442 0.012 70);
+
+    --ink: oklch(0.932 0.012 88);
+    --ink-strong: oklch(0.982 0.010 88);
+    --ink-muted: oklch(0.758 0.013 85);
+    --ink-faint: oklch(0.638 0.013 80);
+
+    --ochre: oklch(0.782 0.126 76);
+    --ochre-ink: oklch(0.205 0.020 70);
+    --record: oklch(0.642 0.176 32);
+    --led: oklch(0.792 0.142 140);
+    --led-amber: oklch(0.792 0.148 80);
+    --led-dim: oklch(0.318 0.008 70);
+
+    --muted-wash: oklch(0.286 0.008 70);
+    --hover-wash: oklch(0.348 0.010 70);
+    --brush: rgb(255 255 255 / 0.022);
+    --rule: oklch(0.352 0.009 70);
+
+    --shadow-key:
+        inset 0 1px 0 oklch(0.40 0.010 70 / 0.65),
+        0 1px 0 oklch(0.115 0.006 70),
+        0 2px 4px oklch(0 0 0 / 0.45);
+    --shadow-key-down:
+        inset 0 2px 5px oklch(0 0 0 / 0.65),
+        inset 0 -1px 0 oklch(0.36 0.010 70 / 0.4);
+    --shadow-well:
+        inset 0 2px 6px oklch(0 0 0 / 0.7),
+        inset 0 -1px 0 oklch(0.35 0.010 70 / 0.35);
+    --meter-glow: 0 0 7px -1px currentColor;
+}
+
+@layer base {
+    * {
+        @apply border-edge outline-ochre/40;
+    }
+
+    html {
+        @apply font-sans antialiased;
+    }
+
+    body {
+        @apply bg-desk text-ink;
+        font-feature-settings: "ss01" 1;
+    }
+
+    ::selection {
+        background: color-mix(in oklab, var(--ochre) 30%, transparent);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--ochre);
+        outline-offset: 2px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 9px;
+        height: 9px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: color-mix(in oklab, var(--ink-faint) 55%, transparent);
+        background-clip: content-box;
+        border: 3px solid transparent;
+        border-radius: 999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: color-mix(in oklab, var(--ink-muted) 75%, transparent);
+        background-clip: content-box;
+    }
+}
+
+/* The main casing. Brushed grain runs vertically across the face, edge to edge. */
+@utility plate {
+    background-color: var(--face);
+    background-image: repeating-linear-gradient(
+        90deg,
+        var(--brush) 0 1px,
+        transparent 1px 3px
+    );
+}
+
+/* A recessed area: input slots, meter housings, list shelves. */
+@utility well {
+    background-color: var(--well);
+    border: 1px solid var(--edge);
+    border-radius: 9px;
+    box-shadow: var(--shadow-well);
+}
+
+/* Engraved separator: a cut line with a lit lower lip. */
+@utility engrave {
+    border-top: 1px solid var(--line);
+    box-shadow: 0 1px 0 var(--line-hi);
+}
+
+/* Silkscreened legend, as molded into the casing. */
+@utility silkscreen {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.145em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+}
+
+/* Condensed cut for titles and numerals, matching equipment lettering. */
+@utility condensed {
+    font-stretch: 80%;
+    letter-spacing: -0.005em;
+}
+
+@utility tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+}
+
+/* Segment chase used while the deck searches for a source. */
+@keyframes meter-chase {
+    0% {
+        opacity: 0.15;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.15;
+    }
+}
+
+@keyframes tape-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@utility tape-in {
+    animation: tape-in 220ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}

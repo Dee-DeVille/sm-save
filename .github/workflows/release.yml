@@ -1,0 +1,147 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest'
+            os_name: 'mac'
+            args: '--target aarch64-apple-darwin' # Compiles arm64 dmg/app
+          - platform: 'windows-latest'
+            os_name: 'windows'
+            args: '' # Compiles x64 exe/msi
+          - platform: 'ubuntu-latest'
+            os_name: 'linux'
+            args: '' # Compiles x64 deb/AppImage
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Rust setup
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin' || '' }}
+
+      - name: Install dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Install frontend dependencies
+        run: bun install
+
+      # Sidecars come straight from the upstream public releases so no private
+      # bucket or credentials are needed.
+      - name: Fetch sidecars (yt-dlp, ffmpeg, ffprobe)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p src-tauri/bin
+          cd src-tauri/bin
+
+          fetch() {
+            curl -fL --retry 6 --retry-delay 3 --retry-all-errors --connect-timeout 20 -o "$2" "$1"
+          }
+
+          case "${{ matrix.os_name }}" in
+            windows)
+              fetch "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe" yt-dlp.exe
+              mv yt-dlp.exe yt-dlp-x86_64-pc-windows-msvc.exe
+
+              fetch "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip" ffmpeg.zip
+              unzip -q -j ffmpeg.zip "*/bin/ffmpeg.exe" "*/bin/ffprobe.exe"
+              rm -f ffmpeg.zip
+              mv ffmpeg.exe ffmpeg-x86_64-pc-windows-msvc.exe
+              mv ffprobe.exe ffprobe-x86_64-pc-windows-msvc.exe
+              ;;
+
+            linux)
+              fetch "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux" yt-dlp-x86_64-unknown-linux-gnu
+
+              fetch "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz" ffmpeg.tar.xz
+              tar -xJf ffmpeg.tar.xz --strip-components=2 -C . "*/bin/ffmpeg" "*/bin/ffprobe"
+              rm -f ffmpeg.tar.xz
+              mv ffmpeg ffmpeg-x86_64-unknown-linux-gnu
+              mv ffprobe ffprobe-x86_64-unknown-linux-gnu
+              ;;
+
+            mac)
+              fetch "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos" yt-dlp-aarch64-apple-darwin
+
+              # Static arm64 builds; the redirect service occasionally misses on the
+              # first try, which the retry loop above absorbs.
+              fetch "https://ffmpeg.martin-riedl.de/redirect/latest/macos/arm64/release/ffmpeg.zip" ffmpeg.zip
+              fetch "https://ffmpeg.martin-riedl.de/redirect/latest/macos/arm64/release/ffprobe.zip" ffprobe.zip
+              unzip -q -o ffmpeg.zip -d ffmpeg-pkg
+              unzip -q -o ffprobe.zip -d ffprobe-pkg
+              mv "$(find ffmpeg-pkg -type f -name ffmpeg -print -quit)" ffmpeg-aarch64-apple-darwin
+              mv "$(find ffprobe-pkg -type f -name ffprobe -print -quit)" ffprobe-aarch64-apple-darwin
+              rm -rf ffmpeg.zip ffprobe.zip ffmpeg-pkg ffprobe-pkg
+              ;;
+
+            *)
+              echo "Unsupported runner: ${{ matrix.os_name }}" >&2
+              exit 1
+              ;;
+          esac
+
+          chmod +x * || true
+          echo "Contents of src-tauri/bin/:"
+          ls -la
+
+      - name: Build and package Tauri app
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'SM-SAVE v__VERSION__'
+          args: ${{ matrix.args }}
+          releaseBody: |
+            ### 📦 Download Assets by Platform
+
+            Choose the appropriate installer for your operating system from the **Assets** section below:
+
+            - 🍎 **macOS (Apple Silicon M1 / M2 / M3 / M4)**:
+              - Download the **`.dmg`** file (e.g. `SM-SAVE_*_aarch64.dmg`).
+              - Open the `.dmg` and drag **SM-SAVE.app** into your **Applications** folder.
+
+            - 🪟 **Windows (64-bit)**:
+              - Download the **`.exe`** installer (e.g. `SM-SAVE_*_x64-setup.exe`) or the **`.msi`** package.
+
+            - 🐧 **Linux (64-bit)**:
+              - Download the **`.AppImage`** or **`.deb`** package (e.g. `sm-save_*_amd64.deb`).
+
+            ---
+
+            ### 🍎 macOS First-Launch Note (Gatekeeper)
+            Because SM-SAVE is an open-source app distributed outside the Mac App Store without an expensive Apple Developer certificate, macOS Gatekeeper may show:
+            > *"SM-SAVE is damaged and can't be opened. You should move it to the Bin."*
+
+            **To open it in seconds:**
+            1. Drag **SM-SAVE.app** from the `.dmg` into your **Applications** folder.
+            2. Open your **Terminal** app and run:
+               ```bash
+               xattr -cr /Applications/SM-SAVE.app
+               ```
+            3. Launch SM-SAVE normally from Applications or Spotlight!
+

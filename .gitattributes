@@ -1,0 +1,12 @@
+# Normalise line endings so the repo stays LF on every platform.
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.icns binary
+*.jpg binary
+*.woff2 binary
+*.msi binary
+*.exe binary
+*.dmg binary
+*.sig binary

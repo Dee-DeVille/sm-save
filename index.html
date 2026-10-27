@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/icon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SM-SAVE</title>
+  <script>
+    // Resolve the finish before paint so the faceplate never flashes the wrong metal.
+    (function () {
+      try {
+        var saved = localStorage.getItem("sm-save_theme");
+        var dark = saved
+          ? saved === "dark"
+          : window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.classList.toggle("dark", dark);
+      } catch (e) {
+        document.documentElement.classList.add("dark");
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

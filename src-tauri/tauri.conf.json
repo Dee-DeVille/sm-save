@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "SM-SAVE",
+  "mainBinaryName": "SM-SAVE",
+  "version": "0.1.0",
+  "identifier": "com.dee.sm-save",
+  "build": {
+    "beforeDevCommand": "bun run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "bun run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "SM-SAVE",
+        "theme": "Dark",
+        "width": 800,
+        "height": 800,
+        "minWidth": 640,
+        "minHeight": 560,
+        "decorations": false,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "Dee",
+    "copyright": "© 2026 Dee",
+    "category": "Utility",
+    "shortDescription": "Download video and audio from social media",
+    "longDescription": "SM-SAVE is a tape-deck styled desktop downloader for video and audio links, powered by yt-dlp and ffmpeg.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "externalBin": [
+      "bin/ffmpeg",
+      "bin/ffprobe",
+      "bin/yt-dlp"
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEZGN0UzMTFGRDVGNDM4NkYKUldSdk9QVFZIekYrLzNzUklRMG5Wenlwc3h4QTVxOWZwRS94V2ZSZ1dUOVNXdkl4Rkw3OWVxakYK",
+      "endpoints": [
+        "https://github.com/Dee-DeVille/sm-save/releases/latest/download/latest.json"
+      ]
+    }
+  }
+}
