@@ -168,6 +168,8 @@ Made by **Dee** — [@dee.deville](https://www.instagram.com/dee.deville) on Ins
 
 SM-SAVE descends from [VADown](https://github.com/mahmingtea/vadown) by mahmingtea. The interface, branding, window chrome, bundle identifier (`com.dee.sm-save`), updater endpoint and signing key are all its own; no upstream branding ships in the app.
 
+Full attribution for the upstream project and for the bundled `yt-dlp`, `ffmpeg` and `ffprobe` binaries lives in [NOTICE.md](NOTICE.md).
+
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE). Third-party components keep their own licenses; see [NOTICE.md](NOTICE.md).
