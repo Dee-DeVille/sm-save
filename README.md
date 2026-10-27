@@ -33,8 +33,9 @@ You do **not** need Rust, Cargo, Bun, Tauri or any other developer tool. Those a
 
 Pre-built packages are published on the **[Releases](https://github.com/Dee-DeVille/sm-save/releases/latest)** page:
 
-- 🪟 **Windows (64-bit)** — published in v0.1.0: the **`.exe`** installer (recommended) or the **`.msi`** package.
-- 🍎 **macOS (Apple Silicon)** / 🐧 **Linux (64-bit)** — the release workflow builds `.dmg`, `.AppImage` and `.deb` whenever a version tag is pushed; those are not attached to v0.1.0 yet.
+- 🪟 **Windows (64-bit)** — `SM-SAVE_0.1.0_x64-setup.exe` (recommended) or the **`.msi`** package.
+- 🍎 **macOS (Apple Silicon)** — `SM-SAVE_0.1.0_aarch64.dmg`.
+- 🐧 **Linux (64-bit)** — the v0.1.0 Linux job failed while unpacking ffmpeg (fixed since), so `.AppImage` / `.deb` arrive with the next release.
 
 ### macOS installation note
 
@@ -119,6 +120,8 @@ The workflow in `.github/workflows/release.yml` runs on any `v*` tag, builds the
 git tag v0.1.0
 git push origin v0.1.0
 ```
+
+The workflow rewrites the release body and merges a `latest.json` covering every platform it built. The platform URLs in that generated manifest point at `api.github.com` asset endpoints; replacing them with plain `https://github.com/Dee-DeVille/sm-save/releases/download/<tag>/<file>` links keeps the updater free of API-auth quirks. Note that CDN caching can serve a stale `latest.json` for a few minutes after a re-upload.
 
 Two secrets are required for signed auto-updates:
 
