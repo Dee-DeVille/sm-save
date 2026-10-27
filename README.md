@@ -166,7 +166,7 @@ scripts/bump.ts          Version bump helper
 
 Made by **Dee** — [@dee.deville](https://www.instagram.com/dee.deville) on Instagram. Source lives at [Dee-DeVille/sm-save](https://github.com/Dee-DeVille/sm-save).
 
-SM-SAVE descends from [VADown](https://github.com/mahmingtea/vadown) by mahmingtea. The interface, branding, window chrome, bundle identifier (`com.dee.sm-save`), updater endpoint and signing key are all its own; no upstream branding ships in the app.
+SM-SAVE descends from [VADown](https://github.com/mahmingtea/vadown) by mahmingtea, which is MIT-licensed (stated in its README). The interface, branding, window chrome, bundle identifier (`com.dee.sm-save`), updater endpoint and signing key are all its own; no upstream branding ships in the app.
 
 Full attribution for the upstream project and for the bundled `yt-dlp`, `ffmpeg` and `ffprobe` binaries lives in [NOTICE.md](NOTICE.md).
 

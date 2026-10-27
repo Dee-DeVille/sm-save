@@ -9,7 +9,12 @@ SM-SAVE is a rebranded derivative of **VADown** by **mahmingtea**.
 
 - Source: <https://github.com/mahmingtea/vadown>
 - Upstream author: [mahmingtea](https://github.com/mahmingtea)
-- Upstream license: none declared (no `LICENSE` file in the repository at the time this derivative was made)
+- Upstream license: **MIT**, as stated in the upstream README — *"This project is primarily licensed under the MIT License."*
+- Copyright: upstream code remains © mahmingtea under MIT terms; the changes in this repository are © 2026 Dee.
+
+No `LICENSE` file is published upstream, so that README statement is the license grant. The word
+"primarily" leaves room for third-party assets with their own terms, which is why the app icon,
+faceplate artwork and branding here are original to this repository rather than carried over.
 
 The application shell, window chrome, download pipeline and original Rust/React structure derive
 from that project. The SM-SAVE name, artwork, icon, colour treatments, bundle identifier
