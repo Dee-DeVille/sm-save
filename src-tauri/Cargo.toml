@@ -1,6 +1,6 @@
 [package]
 name = "sm-save"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tape-deck styled downloader for video and audio links"
 authors = ["Dee"]
 edition = "2021"
