@@ -119,7 +119,12 @@ jobs:
         run: |
           set -euo pipefail
           cd src-tauri/bin
-          ./ffmpeg-* -hide_banner -encoders 2>/dev/null | grep -q "libmp3lame"
+          # Write the encoder list to a file first: piping straight into `grep -q`
+          # lets grep exit early, which SIGPIPEs ffmpeg and fails the step under
+          # `pipefail` even though the encoder is present.
+          ./ffmpeg-* -hide_banner -encoders > encoders.txt 2>&1
+          grep -q "libmp3lame" encoders.txt
+          rm -f encoders.txt
           ./ffprobe-* -version > /dev/null
           ./yt-dlp-* --version
           echo "sidecars OK - MP3 encoder present"
