@@ -146,11 +146,11 @@ jobs:
             | --- | --- |
             | 🪟 **Windows 10/11 (64-bit)** | `SM-SAVE_*_x64-setup.exe` (recommended) or the `.msi` package |
             | 🍎 **macOS (Apple Silicon)** | `SM-SAVE_*_aarch64.dmg` |
-            | 🐧 **Linux (64-bit)** | `.AppImage` / `.deb` — see note below |
+            | 🐧 **Linux (64-bit)** | `.AppImage` (portable) or the smaller `.deb` / `.rpm` |
 
             Download, run, then launch **SM-SAVE**. `yt-dlp`, `ffmpeg` and `ffprobe` are bundled inside the installer, so nothing else needs installing — no Rust, Bun or Tauri toolchain required.
 
-            🐧 **Linux:** the v0.1.0 job failed while unpacking ffmpeg (fixed since), so Linux packages ship with the next release.
+            **Linux:** the packages bundle statically linked FFmpeg, so they are larger than the Windows build — the `.deb` / `.rpm` are the lighter choice.
 
             ---
 

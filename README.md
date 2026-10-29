@@ -35,7 +35,7 @@ Pre-built packages are published on the **[Releases](https://github.com/Dee-DeVi
 
 - 🪟 **Windows (64-bit)** — `SM-SAVE_<version>_x64-setup.exe` (recommended) or the **`.msi`** package.
 - 🍎 **macOS (Apple Silicon)** — `SM-SAVE_<version>_aarch64.dmg`.
-- 🐧 **Linux (64-bit)** — `.AppImage` or `.deb`.
+- 🐧 **Linux (64-bit)** — `.AppImage` (portable) or the smaller `.deb` / `.rpm`.
 
 Which sites work? The full list is maintained upstream by the engine SM-SAVE uses: **[supportedsites.md](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)** — about 1,800 sites. A few of them need cookies, a login or an unblocked region, which is what the **browser session** option is for.
 
@@ -119,11 +119,18 @@ with `{"bundle":{"createUpdaterArtifacts":false}}` in that file.
 The workflow in `.github/workflows/release.yml` runs on any `v*` tag, builds the app for macOS, Windows and Linux, and attaches the installers plus the signed `latest.json` to the release:
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.1.1
+git push origin v0.1.1
 ```
 
-The workflow rewrites the release body and merges a `latest.json` covering every platform it built. The platform URLs in that generated manifest point at `api.github.com` asset endpoints; replacing them with plain `https://github.com/Dee-DeVille/sm-save/releases/download/<tag>/<file>` links keeps the updater free of API-auth quirks. Note that CDN caching can serve a stale `latest.json` for a few minutes after a re-upload.
+The workflow rewrites the release body and merges a `latest.json` covering every platform it built. Two corrections are needed before the updater can be trusted:
+
+- **Rewrite the URLs.** The generated manifest points at `api.github.com` asset endpoints. Replace them with plain `https://github.com/Dee-DeVille/sm-save/releases/download/<tag>/<file>` links to keep the updater free of API-auth quirks.
+- **Point `windows-x86_64` at the NSIS `.exe`.** CI sets that generic key to the `.msi`, but existing users installed through the `.exe`, and the updater would hand them a package it cannot run. Copy the `windows-x86_64-nsis` entry (URL *and* signature) over it.
+
+Re-upload the file as `latest.json` — `gh release upload` takes the name from the local path, so a renamed temp file silently lands as a new asset instead of replacing the manifest. The CDN can then serve a stale copy for a few minutes, so verify with a fresh download before assuming the upload failed.
+
+**Save the manifest as UTF-8 without a BOM.** On Windows, PowerShell 5.1's `Set-Content -Encoding utf8` (and `>`) writes a BOM, and the updater rejects the whole file with `error decoding response body` — the rest of the manifest can be perfectly valid. Write it with `[System.IO.File]::WriteAllText($path, $json, (New-Object System.Text.UTF8Encoding($false)))` and check the first three bytes are `7B`, not `EF BB BF`.
 
 Two secrets are required for signed auto-updates:
 
