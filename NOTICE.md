@@ -29,11 +29,15 @@ time from their official releases and are not part of SM-SAVE's own source.
 | Binary | Project | License | Source |
 | --- | --- | --- | --- |
 | `yt-dlp` | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Unlicense (public domain) | <https://github.com/yt-dlp/yt-dlp> |
-| `ffmpeg` | [FFmpeg](https://ffmpeg.org/) | GPL (BtbN `-gpl` builds) | <https://github.com/BtbN/FFmpeg-Builds>, <https://ffmpeg.org/download.html> |
-| `ffprobe` | [FFmpeg](https://ffmpeg.org/) | GPL (BtbN `-gpl` builds) | <https://github.com/BtbN/FFmpeg-Builds>, <https://ffmpeg.org/download.html> |
+| `ffmpeg` | [FFmpeg](https://ffmpeg.org/) | Windows: GPL (gyan.dev *essentials*); Linux: LGPL (BtbN); macOS: static build | <https://www.gyan.dev/ffmpeg/builds/>, <https://github.com/BtbN/FFmpeg-Builds>, <https://ffmpeg.martin-riedl.de/> |
+| `ffprobe` | [FFmpeg](https://ffmpeg.org/) | same build as `ffmpeg` | same as above |
 
-FFmpeg is distributed under the GNU General Public License; the corresponding source for the exact
-builds used is available from the FFmpeg project and from the BtbN build definitions linked above.
+Each platform ships whichever FFmpeg variant is both small and complete enough for the app's needs —
+decoding, stream-copy muxing and the MP3 encoder (`libmp3lame`). The release workflow verifies that
+encoder is present before packaging, so a build that cannot produce MP3 audio fails CI instead of
+shipping. FFmpeg is distributed under the GNU General Public License (Windows) or GNU Lesser General
+Public License (Linux); the corresponding source for the exact builds used is available from the
+FFmpeg project and from the build definitions linked above.
 
 ## Libraries
 

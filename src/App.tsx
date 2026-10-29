@@ -17,6 +17,7 @@ import AppVersion from "./components/app-version";
 import DownloadHistory from "./components/download-history";
 import ThemeToggle from "./components/theme-toggle";
 import WindowControls from "./components/window-controls";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { DownloadHistoryItem, checkFileDiskStatus } from "./lib/history";
 import { SupportedBrowser, SUPPORTED_BROWSERS } from "./lib/browser-flags";
 import { Theme, applyTheme, resolveInitialTheme } from "./lib/theme";
@@ -217,6 +218,12 @@ export default function App() {
     setStatus("idle");
   };
 
+  /** Cancels a source that has been analysed but not started, returning the deck to standby. */
+  const handleCancelAnalysis = () => {
+    handleNewDownload();
+    setCurrentLog("");
+  };
+
   const handleRedownload = async (item: DownloadHistoryItem) => {
     if (item.filePath) {
       try {
@@ -299,7 +306,7 @@ export default function App() {
   return (
     <div className="flex min-h-dvh flex-col bg-desk">
       <div className="plate flex min-h-dvh w-full flex-col overflow-hidden">
-        <h1 className="sr-only">SM-SAVE — download from social media</h1>
+        <h1 className="sr-only">SM-SAVE — A Media Downloader</h1>
 
         {/* Model plate: identity, tagline, transport readout, finish, window keys */}
         <header
@@ -319,7 +326,7 @@ export default function App() {
                 SM-SAVE
               </span>
               <span data-tauri-drag-region className="font-mono text-[10px] tracking-[0.02em] text-ink-muted">
-                download from social media
+                A Media Downloader
               </span>
             </div>
           </div>
@@ -367,6 +374,23 @@ export default function App() {
               url={url}
               isAnalyzed={isAnalyzed}
             />
+          </div>
+
+          <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <button
+              type="button"
+              onClick={() =>
+                void openUrl("https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md")
+              }
+              title="The full list of sites handled by the bundled yt-dlp. Some sites need cookies, a login or a non-blocked region — use a browser session for those."
+              className="cursor-pointer font-mono text-[10px] tracking-[0.08em] text-ink-muted underline decoration-dotted underline-offset-2 transition-colors hover:text-ink-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-strong"
+            >
+              Supported Sites
+            </button>
+            <span aria-hidden className="text-ink-muted/50">·</span>
+            <span className="font-mono text-[10px] tracking-[0.02em] text-ink-muted/70">
+              YouTube · Instagram · TikTok · X · and 1,800 more
+            </span>
           </div>
 
           <div className="mt-3 space-y-2">
@@ -568,7 +592,7 @@ export default function App() {
 
         {/* Transport status and level meter — always on the faceplate */}
         <section className="engrave px-5 py-3">
-          <ProgressCard ready={isAnalyzed} status={status} currentLog={currentLog} duration={duration} elapsedTime={elapsedTime} progress={progress} isPlaylist={isPlaylist} handleStop={handleStop} handleNewDownload={handleNewDownload} formatDuration={formatDuration} />
+          <ProgressCard ready={isAnalyzed} status={status} currentLog={currentLog} duration={duration} elapsedTime={elapsedTime} progress={progress} isPlaylist={isPlaylist} handleStop={handleStop} handleCancelAnalysis={handleCancelAnalysis} handleNewDownload={handleNewDownload} formatDuration={formatDuration} />
         </section>
 
         <div className="flex min-h-0 flex-1 flex-col">

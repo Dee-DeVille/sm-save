@@ -12,11 +12,12 @@ type Props = {
     isPlaylist: boolean;
     ready?: boolean;
     handleStop: () => void;
+    handleCancelAnalysis: () => void;
     handleNewDownload: () => void;
     formatDuration: (duration: number) => string;
 }
 
-export default function ProgressCard({ status, currentLog, duration, elapsedTime, progress, isPlaylist, ready, handleStop, handleNewDownload, formatDuration }: Props) {
+export default function ProgressCard({ status, currentLog, duration, elapsedTime, progress, isPlaylist, ready, handleStop, handleCancelAnalysis, handleNewDownload, formatDuration }: Props) {
     const handleOpenDownloads = async () => {
         try {
             await invoke("open_download_folder");
@@ -93,6 +94,17 @@ export default function ProgressCard({ status, currentLog, duration, elapsedTime
                 </span>
 
                 <div className="flex items-center gap-1.5">
+                    {status === "idle" && ready && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCancelAnalysis}
+                            className="h-6 px-2.5 text-[11px]"
+                        >
+                            Cancel
+                        </Button>
+                    )}
+
                     {(status === "downloading" || status === "analyzing") && (
                         <Button
                             variant="destructive"

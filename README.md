@@ -4,7 +4,7 @@
 
 # SM-SAVE
 
-**download from social media**
+**A Media Downloader**
 
 A tape-deck styled desktop downloader for video and audio links, built with [Tauri](https://tauri.app/) v2, [React](https://react.dev/) 19, TypeScript and Tailwind CSS v4. Powered by `yt-dlp` and `ffmpeg` under the hood.
 
@@ -33,9 +33,11 @@ You do **not** need Rust, Cargo, Bun, Tauri or any other developer tool. Those a
 
 Pre-built packages are published on the **[Releases](https://github.com/Dee-DeVille/sm-save/releases/latest)** page:
 
-- 🪟 **Windows (64-bit)** — `SM-SAVE_0.1.0_x64-setup.exe` (recommended) or the **`.msi`** package.
-- 🍎 **macOS (Apple Silicon)** — `SM-SAVE_0.1.0_aarch64.dmg`.
-- 🐧 **Linux (64-bit)** — the v0.1.0 Linux job failed while unpacking ffmpeg (fixed since), so `.AppImage` / `.deb` arrive with the next release.
+- 🪟 **Windows (64-bit)** — `SM-SAVE_<version>_x64-setup.exe` (recommended) or the **`.msi`** package.
+- 🍎 **macOS (Apple Silicon)** — `SM-SAVE_<version>_aarch64.dmg`.
+- 🐧 **Linux (64-bit)** — `.AppImage` or `.deb`.
+
+Which sites work? The full list is maintained upstream by the engine SM-SAVE uses: **[supportedsites.md](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)** — about 1,800 sites. A few of them need cookies, a login or an unblocked region, which is what the **browser session** option is for.
 
 ### macOS installation note
 
@@ -134,7 +136,7 @@ The matching public key is already in `src-tauri/tauri.conf.json` (`plugins.upda
 
 ## Prebuilt Windows installers
 
-`installers/` holds the `.msi` and `.exe` produced from this source at v0.1.0. They are far larger than GitHub's per-file limit for repository uploads, so attach them to a Release instead of committing them (the folder is git-ignored).
+`installers/` holds the local Windows builds. A build comes out around **81 MB** for the NSIS `.exe` and **103 MB** for the `.msi` — most of which is the bundled FFmpeg sidecars. Both exceed GitHub's per-file limit for repository content, so attach them to a Release instead of committing them (the folder is git-ignored). [NOTICE.md](NOTICE.md) records which FFmpeg build each platform uses and why.
 
 ## Versioning
 

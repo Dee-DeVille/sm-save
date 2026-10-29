@@ -65,7 +65,9 @@ jobs:
               fetch "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe" yt-dlp.exe
               mv yt-dlp.exe yt-dlp-x86_64-pc-windows-msvc.exe
 
-              fetch "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip" ffmpeg.zip
+              # gyan.dev "essentials" build: ~110 MB zipped versus ~192 MB for the
+              # full build, and it still carries libmp3lame for the MP3 post-processor.
+              fetch "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" ffmpeg.zip
               unzip -q -j ffmpeg.zip "*/bin/ffmpeg.exe" "*/bin/ffprobe.exe"
               rm -f ffmpeg.zip
               mv ffmpeg.exe ffmpeg-x86_64-pc-windows-msvc.exe
@@ -75,7 +77,9 @@ jobs:
             linux)
               fetch "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux" yt-dlp-x86_64-unknown-linux-gnu
 
-              fetch "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz" ffmpeg.tar.xz
+              # LGPL build: ~13 MB smaller than the GPL variant, and SM-SAVE only
+              # needs decoding, stream-copy muxing and the MP3 encoder.
+              fetch "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-lgpl.tar.xz" ffmpeg.tar.xz
               # GNU tar only expands globs with --wildcards, so extract the archive
               # wholesale and locate the binaries instead of matching paths in tar.
               mkdir -p ffmpeg-pkg
@@ -108,6 +112,17 @@ jobs:
           chmod +x * || true
           echo "Contents of src-tauri/bin/:"
           ls -la
+
+      # Guards the size trade-off: the smaller builds must still be functional.
+      - name: Verify sidecars
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd src-tauri/bin
+          ./ffmpeg-* -hide_banner -encoders 2>/dev/null | grep -q "libmp3lame"
+          ./ffprobe-* -version > /dev/null
+          ./yt-dlp-* --version
+          echo "sidecars OK - MP3 encoder present"
 
       - name: Build and package Tauri app
         uses: tauri-apps/tauri-action@v1
